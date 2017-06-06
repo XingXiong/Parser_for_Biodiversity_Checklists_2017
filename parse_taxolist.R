@@ -63,8 +63,9 @@ getFamily <- function(x,sciName){
   return(Family)
 }
 
-parse_taxolist <- function(input,type,sep,output){if (type == "txt") {file = read.csv(input, sep = sep , header = FALSE)}
-  if (type == "csv") {file = read.csv(input, sep = sep , header = FALSE)}
+parse_taxolist <- function(filepath,filename,type,sep,output){
+  # read input file
+  file <- read_file(filepath, filename,type,sep)
   
   length = length(file[, 1])
   sciName = getSciname(file)
@@ -89,5 +90,22 @@ parse_taxolist <- function(input,type,sep,output){if (type == "txt") {file = rea
   return(table)
 }
 
-b = parse_taxolist("taxo01.txt","txt","\t","taxo_out01.csv")
-c = parse_taxolist("testest.csv","csv","\t","taxo_out02.csv")
+read_file < -function(filepath, filename,type,sep){
+  if (tolower(type) == "txt") {
+    file_path_name<-paste(filepath,"/",filename,sep="")
+    file <- read.table(file_path_name, sep = sep, header = FALSE)
+  }
+  if (tolower(type) == "csv") {
+    file_path_name<-paste(filepath,"/",filename,sep="")
+    file <- read.csv(file_path_name, sep = sep, header = FALSE)
+  }
+  if (tolower(type) == 'pdf') {
+    pdf_file <- file.path(filepath,filename)
+    context <- pdf_text(pdf_file)
+    file <- cat(context)
+  }
+}
+
+# a = parse_taxolist("taxo01.txt","txt","\t","taxo_out01.csv")
+# b = parse_taxolist("testest.csv","csv","\t","taxo_out02.csv")
+
